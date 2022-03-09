@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
   const [color, setColor] = useState();
   const [text, setText] = useState("color");
+  const [content, setContent] = useState("");
+  const [auther, setAuther] = useState("");
 
   const changeBackground = () => {
     if (text === "color" || text === "Yellow") {
@@ -16,6 +18,15 @@ function App() {
       setText("Yellow");
     }
   };
+
+  useEffect(() => {
+    fetch("http://api.quotable.io/random")
+      .then((response) => response.json())
+      .then((data) => {
+        setContent(data.content);
+        setAuther(data.auther);
+      });
+  }, [count, color]);
 
   return (
     <div className="app">
@@ -43,6 +54,11 @@ function App() {
             {`Change to ${text}`}
           </button>
         </div>
+      </div>
+
+      <div className="quote">
+        <h1>{content}</h1>
+        <span>{auther}</span>
       </div>
     </div>
   );
